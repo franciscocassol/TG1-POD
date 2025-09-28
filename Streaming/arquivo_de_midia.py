@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ArquivoDeMidia:
+class ArquivoDeMidia(ABC):
     reproducoes = 0
 
     def __init__(
