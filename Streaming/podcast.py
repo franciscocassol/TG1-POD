@@ -1,4 +1,4 @@
-from arquivo_de_midia import ArquivoDeMidia
+from Streaming.arquivo_de_midia import ArquivoDeMidia
 
 class Podcast(ArquivoDeMidia):
     reproducoes = 0

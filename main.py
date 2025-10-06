@@ -1,1 +1,3 @@
-# arquivo inicializado
+from Streaming.menu import Menu
+
+Menu.initialize()

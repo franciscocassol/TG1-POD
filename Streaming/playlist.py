@@ -1,5 +1,5 @@
-from arquivo_de_midia import ArquivoDeMidia
-from usuario import Usuario
+from Streaming.arquivo_de_midia import ArquivoDeMidia
+from Streaming.usuario import Usuario
 
 class Playlist:
     reproducoes = 0
