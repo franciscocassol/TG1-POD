@@ -1,20 +1,36 @@
 from Streaming.arquivo_de_midia import ArquivoDeMidia
 from Streaming.playlist import Playlist
+from Streaming.musica import Musica
+from Streaming.podcast import Podcast
 
 
 class Usuario:
     qntd_instancias = 0
     historico = []
+    musicas = ()
+    podcasts = ()
+
 
     def __init__(self, nome, playlists):
         self.qntd_instancias += 1
         self.nome = nome
         self.playlists = playlists
 
-        for p in playlists:
+        Usuario.initialize_playlists()
+        
+
+    def initialize_playlists(self):  
+        for p in self.playlists:
             self.criar_playlist(p)
+            for item in p.itens:
+                if(isinstance(item, Musica)):
+                    self.musicas.add(item)
+                elif(isinstance(item, Podcast)):
+                    self.poscasts.add(item)
+                      
 
     def ouvir_midia(midia: ArquivoDeMidia):
+        print(f'teste - ouviu musica {midia}')
         pass
 
     def criar_playlist(self, nome):
