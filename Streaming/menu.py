@@ -2,6 +2,7 @@ from Streaming.usuario import Usuario
 from Streaming.analises import Analises
 
 class Menu:
+    users = []
     def initialize():
         option = 0
 
@@ -55,7 +56,7 @@ class Menu:
             option = Menu.selection_logic(9)
             match (option):
                 case 1: Menu.reproduzir_musica(usuario)
-                case 2: print('b')
+                case 2: Menu.create_new_user()
                 case 3: print('c')
                 case 4: print('d')
                 case 5: print('e')
@@ -91,6 +92,17 @@ class Menu:
                 print("Opção inválida. Tente novamente.")
 
         return option
+    def create_new_user():
+        print("Criar novo usuário")
+        while True:
+            nome_usuario = input("Digite o nome do usuário: ")
+            usuario_existente = any(u.nome == nome_usuario for u in Menu.users) 
+            if usuario_existente:
+                print(f"Erro.: O nome de usuário '{nome_usuario}' já existe.")
+            else:
+                new_user = Usuario(nome=nome_usuario, playlists=[])
+                Menu.users.append(new_user)
+                print(f"Usuário '{new_user.nome}' criado com sucesso.")
 
     def create_match_playlist_option(u1: Usuario):
         print("Criar match")
