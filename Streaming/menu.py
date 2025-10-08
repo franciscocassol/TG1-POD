@@ -1,4 +1,5 @@
 from Streaming.usuario import Usuario
+from Streaming.analises import Analises
 
 class Menu:
     def initialize():
@@ -44,13 +45,14 @@ class Menu:
         print(f"<5> - Criar nova playlist")
         print(f"<6> - Concatenar playlists")
         print(f"<7> - Gerar relatório")
-        print(f"<8> - Sair")
+        print(f"<8> - Criar match")
+        print(f"<9> - Sair")
 
         option = 0
 
         print(usuario)
-        while (option != 8):
-            option = Menu.selection_logic(8)
+        while (option != 9):
+            option = Menu.selection_logic(9)
             match (option):
                 case 1: Menu.reproduzir_musica(usuario)
                 case 2: print('b')
@@ -59,7 +61,8 @@ class Menu:
                 case 5: print('e')
                 case 6: print('f')
                 case 7: print('g')
-                case _: option = 8
+                case 8: print (Menu.create_match_playlist_option(usuario))
+                case _: option = 9
 
     def reproduzir_musica(user):
         # musicas = user.musicas
@@ -88,3 +91,24 @@ class Menu:
                 print("Opção inválida. Tente novamente.")
 
         return option
+
+    def create_match_playlist_option(u1: Usuario):
+        print("Criar match")
+        print("Escolha o usuário para fazer o match")
+
+        opcoes = [u for u in Menu.all_usuers if u.nome != u1.nome]
+
+        for idx, u in enumerate(opcoes):
+            print(f"<{idx+1}> - {u.nome}")
+        
+        users_len = len(opcoes)
+        op = Menu.selection_logic(users_len) -1
+        u2 = opcoes[op]
+        
+        new_playlist = Analises.create_match_playlists(u1, u2)
+
+        if new_playlist:
+            u1.playlists.append(new_playlist)
+            print(f"Playlis '{new_playlist.nome}' criada e adicionada a sua biblioteca")
+        else:
+            print("Não foi possivel criar a playlist.")
