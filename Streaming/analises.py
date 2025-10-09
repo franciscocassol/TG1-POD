@@ -1,7 +1,7 @@
-from arquivo_de_midia import ArquivoDeMidia
-from playlist import Playlist
-from musica import Musica
-from usuario import Usuario
+from .arquivo_de_midia import ArquivoDeMidia
+from .playlist import Playlist
+from .musica import Musica
+from .usuario import Usuario
 
 class Analises:
 

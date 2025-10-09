@@ -1,51 +1,52 @@
-from Streaming.arquivo_de_midia import ArquivoDeMidia
-from Streaming.playlist import Playlist
-from Streaming.musica import Musica
-from Streaming.podcast import Podcast
+from .arquivo_de_midia import ArquivoDeMidia
+from .playlist import Playlist
+from .musica import Musica
+from .podcast import Podcast
 
 
 class Usuario:
     qntd_instancias = 0
-    historico = []
-    musicas = ()
-    podcasts = ()
+    
 
-
-    def __init__(self, nome, playlists):
-        self.qntd_instancias += 1
+    def __init__(self, nome, playlists_names):
+        Usuario.qntd_instancias += 1
         self.nome = nome
-        self.playlists = playlists
+        self.playlists_names = playlists_names
+        self.playlists = []
 
-        Usuario.initialize_playlists()
-        
+        self.historico = []
+        self.musicas = set()
+        self.podcasts = set()
 
-    def initialize_playlists(self):  
-        for p in self.playlists:
+        self.initialize_playlists()
+
+    def initialize_playlists(self):
+        for p in self.playlists_names:
             self.criar_playlist(p)
+
+    
+    def inicialize_media(self):
+        for p in self.playlists:
             for item in p.itens:
                 if(isinstance(item, Musica)):
                     self.musicas.add(item)
                 elif(isinstance(item, Podcast)):
-                    self.poscasts.add(item)
-                      
+                    self.podcasts.add(item)
 
-    def ouvir_midia(midia: ArquivoDeMidia):
-        print(f'teste - ouviu musica {midia}')
-        pass
+
+    def ouvir_midia(self, midia: ArquivoDeMidia):
+        midia.reproducoes += 1
+        midia.reproduzir()
 
     def criar_playlist(self, nome):
-        self.playlists.append(Playlist(nome, self, [], 0))
+        self.playlists.append(Playlist(nome, self, []))
         return self.playlists[-1]
-        pass
-        
 
     def __str__(self):
-        str_final = ''
-        for p in self.playlists:
-            str_final += ", ".join(p)
-        return (str_final)
+        return f'{self.nome}'
+
+    def __repr__(self):
+        return f'User: {self.nome}\nPlaylists: {self.playlists}'
 
 
-if __name__ == "__main__":
-    user = Usuario('a', [])
-    print(user)
+

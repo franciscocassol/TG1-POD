@@ -1,8 +1,8 @@
-from Streaming.arquivo_de_midia import ArquivoDeMidia
+from .arquivo_de_midia import ArquivoDeMidia
 # from Streaming.usuario import Usuario
 
 class Playlist:
-    reproducoes = 0
+    
 
     def __init__(
             self, nome: str, usuario,
@@ -10,6 +10,7 @@ class Playlist:
         self.nome = nome
         self.usuario = usuario
         self.itens = itens
+        self.reproducoes = 0
 
     def adicionar_midia(self, midia: ArquivoDeMidia):
         self.itens.append(midia)
@@ -19,10 +20,10 @@ class Playlist:
 
     def reproduzir(self):
         self.reproducoes += 1
-        print('Músicas reproduzidas')
+        # print('Músicas reproduzidas')
         for i in self.itens:
-            print(i)
             i.reproducoes += 1
+            i.reproduzir()
 
     def __add__(self, other):
         return Playlist(
@@ -40,5 +41,11 @@ class Playlist:
 
     def __eq__(self, other):
         (self.nome == other.nome and
-         self.usario == other.usuario and
+         self.usuario == other.usuario and
          self.itens == other.itens)
+        
+    def __str__(self):
+        return f'{self.nome}: {self.itens}'    
+
+    def __repr__(self):
+        return f'{self.nome}: {self.itens}' 
