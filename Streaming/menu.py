@@ -1,78 +1,209 @@
-from Streaming.usuario import Usuario
+from .usuario import Usuario
+from .le_arquivo import LeArquivo
+import os
+from pathlib import Path
+
 
 class Menu:
     def initialize():
         option = 0
+        
+        file_path = Path('TG1-POD/config/dados.md')
+        
+
+        users_list, songs_list, podcasts_list = LeArquivo.read_file(file_path)
+        # print('users_list\n', users_list)
+
+        # print('songs_list\n', songs_list)
+        
+        # print('podcasts_list\n', podcasts_list)
+
+
 
         while (option != 4):
-            option = Menu.select_option()
+            option = Menu.select__main_option()
             match (option):
-                case 1: Menu.user_options(Menu.sign_in_user())
-                case 2: print('b') 
-                case 3: print('c')
+                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list)
+                case 2: Menu.create_new_user(users_list)
+                case 3: Menu.listar_usuarios(users_list)
                 case _: option = 4
 
         print("Fim do programa!")
 
-    def select_option() -> int:
-        print(f"\nSelecione uma das opções:")
-        print(f"<1> - Entrar como usuário")
-        print(f"<2> - Criar novo usuário")
-        print(f"<3> - Listar usuários")
-        print(f"<4> - Finalizar programa")
+    def select__main_option() -> int:
+
+        ls_options = ['Entrar como usuário', 'Criar novo usuário',
+                      'Listar usuários',  'Finalizar programa']
+        Menu.enumarate_logic(ls_options)
 
         return Menu.selection_logic(4)
 
-    def sign_in_user():
-        users_teste = ['u1', 'u2', 'u3']  # lista de usuarios
-        for idx, u in enumerate(users_teste):
-            print(f"<{idx + 1}> - {u}")
+    def listar_usuarios(users_list):
 
-        users_len = len(users_teste)
+        Menu.enumarate_logic(users_list, False)
+
+    def sign_in_user(users_list):
+
+        Menu.enumarate_logic(users_list)
+
+        users_len = len(users_list)
 
         option = Menu.selection_logic(users_len) - 1
-    # print()
 
-        return users_teste[option]
+        return users_list[option]
 
-    def user_options(usuario):
-        print(f"\nSelecione uma das opções:")
-        print(f"<1> - Reproduzir uma música")
-        print(f"<2> - Listar músicas")
-        print(f"<3> - Listar playlists")
-        print(f"<4> - Reproduzir uma playlist")
-        print(f"<5> - Criar nova playlist")
-        print(f"<6> - Concatenar playlists")
-        print(f"<7> - Gerar relatório")
-        print(f"<8> - Sair")
+    def user_options(user, songs_list, podcasts_list):
 
         option = 0
 
-        print(usuario)
+        print(user)
         while (option != 8):
-            option = Menu.selection_logic(8)
+            option = Menu.select_user_option()
             match (option):
-                case 1: Menu.reproduzir_musica(usuario)
-                case 2: print('b')
-                case 3: print('c')
-                case 4: print('d')
-                case 5: print('e')
-                case 6: print('f')
-                case 7: print('g')
+                case 1: Menu.reproduzir_musica(user)
+                case 2: Menu.listar_musicas(user)
+                case 3: Menu.listar_playlists(user)
+                case 4: Menu.reproduzir_playlist(user)
+                case 5: Menu.criar_nova_playlist(user, songs_list, podcasts_list)
+                case 6: Menu.concatenar_playlists(user)
+                case 7: Menu.gerar_relatorio(user)
                 case _: option = 8
 
-    def reproduzir_musica(user):
-        # musicas = user.musicas
-        musicas_teste = ['mus1', 'mus2', 'mus3']  # lista de musicas usuarios
+    def select_user_option():
+        ls_options = ['Reproduzir uma música', 'Listar músicas', 'Listar playlists',
+                      'Reproduzir uma playlist', 'Criar nova playlist',
+                      'Concatenar playlists', 'Gerar relatório', 'Sair']
+        Menu.enumarate_logic(ls_options)
 
-        for idx, u in enumerate(musicas_teste):
-            print(f"<{idx + 1}> - {u}")
-        
-        musicas_len = len(musicas_teste)
+        return Menu.selection_logic(8)
+
+    def reproduzir_musica(user):
+        musicas = list(user.musicas)
+
+        Menu.enumarate_logic(musicas)
+
+        musicas_len = len(musicas)
         option = Menu.selection_logic(musicas_len)
 
-        Usuario.ouvir_midia(musicas_teste[option - 1])
+        user.ouvir_midia(musicas[option - 1])
+
+    def listar_musicas(user):
+        musicas = list(user.musicas)
+
+        Menu.enumarate_logic(musicas, False)
+
+    def listar_playlists(user):
+        playlists = list(user.playlists)
+
+        Menu.enumarate_logic(playlists, False)
+
+    def reproduzir_playlist(user):
+        playlists = list(user.playlists)
+
+        if len(playlists) == 0:
+            print('{user} não tem playlists.')
+            return
+
+        Menu.enumarate_logic(playlists)
+
+        playlists_len = len(playlists)
+        option = Menu.selection_logic(playlists_len)
+
+        playlists[option - 1].reproduzir()
+
+
+    def criar_nova_playlist(user, songs_list, podcasts_list):
+
+        valid = False
+        while not valid:
+            nome_playlist = input("Digite o nome da nova playlist: ")
+            playlist_esiste = any(p.nome == nome_playlist for p in user.playlists) 
+            if playlist_esiste:
+                print(f"Erro: O nome de usuário '{nome_playlist}' já existe.\n")
+                continue
+            new_playlist = user.criar_playlist(nome_playlist)
+            print(f"\nPlaylist '{nome_playlist}' criada com sucesso.")
+            valid = True
+
+
+        midias = songs_list + podcasts_list
+        midias.append('Sair')
+        valid = False
         
+        while len(midias) != 1:
+            print('\nEscolha uma música para adicionar:')
+            
+
+            Menu.enumarate_logic(midias, False)
+
+            midias_len = len(midias)
+            option = Menu.selection_logic(midias_len)
+
+            if option == midias_len:
+                break
+
+            new_playlist.adicionar_midia(midias[option - 1])
+            print(f'{midias[option - 1]} adicionada com sucesso')
+            midias.pop(option - 1)
+            
+
+
+
+        # Usuario.criar_playlist(nome)
+        
+    def create_new_user(users_list):
+        print("Criar novo usuário")
+        valid = False
+        while not valid:
+            nome_usuario = input("Digite o nome do usuário: ")
+            usuario_existente = any(u.nome == nome_usuario for u in users_list) 
+            if usuario_existente:
+                print(f"Erro.: A playlist '{nome_usuario}' já existe.")
+            else:
+                new_user = Usuario(nome_usuario, [])
+                users_list.append(new_user)
+                print(f"Usuário '{new_user.nome}' criado com sucesso.")
+                valid = True
+
+    def concatenar_playlists(user):
+        playlists = list(user.playlists)
+
+
+        playlists_len = len(playlists)
+
+        if len(playlists) < 2:
+            print('\nQuantidade de playlists insuficientes para realizar essa ação')
+            print(f'Atulamente existem {playlists_len} playlist(s)')
+            return
+
+        Menu.enumarate_logic(playlists)
+        option = Menu.selection_logic(playlists_len)
+
+        playlist_1 = playlists[option - 1]
+
+        new_playlist_list = playlists.remove(playlist_1)
+
+        Menu.enumarate_logic(playlists)
+        option2 = Menu.selection_logic(playlists_len - 1)
+
+        playlist_2 = playlists[option2 - 1]
+
+        print('pl', playlist_1)
+        print('p2', playlist_2)
+
+        # p_new = playlist_1 + playlist_2
+
+        # print(p_new)
+
+    def gerar_relatorio(user):
+        pass
+
+    def enumarate_logic(options: list, print_select=True):
+        if print_select:
+            print(f"\nSelecione uma das opções:")
+        print()
+        for idx, o in enumerate(options):
+            print(f"<{idx + 1}> - {o}")
 
     def selection_logic(n_options):
         option = 0
