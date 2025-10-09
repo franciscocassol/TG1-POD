@@ -72,6 +72,11 @@ class LeArquivo:
             words = lines[i].strip().split(': ')
             if words and words[0] == '- nome':
 
+                usuario_existente = any(u.nome == words[1] for u in users_list) 
+                if usuario_existente:
+                    LeArquivo.log_error(f"O usuário '{words[1]}' já existe no sistema")
+                    continue
+
                 next_line = lines[i+1]
 
                 playlist = next_line.split(":")[1].strip()[1:-1].split(",")

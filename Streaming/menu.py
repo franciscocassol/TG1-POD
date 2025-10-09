@@ -1,6 +1,6 @@
 from .usuario import Usuario
 from .le_arquivo import LeArquivo
-import os
+from .analises import Analises
 from pathlib import Path
 
 
@@ -9,24 +9,18 @@ class Menu:
     def initialize():
         option = 0
         
-        file_path = Path('TG1-POD/config/dados.md')
+        file_path = Path(__file__).resolve().parent.parent / 'config' / 'dados.md'
         
 
         users_list, songs_list, podcasts_list = LeArquivo.read_file(file_path)
-        # print('users_list\n', users_list)
-
-        # print('songs_list\n', songs_list)
-        
-        # print('podcasts_list\n', podcasts_list)
-
 
 
         while (option != 4):
             option = Menu.select__main_option()
             match (option):
-                case 1: Menu.user_options(Menu.sign_in_user())
-                case 2: Menu.create_new_user()
-                case 3: print('c')
+                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list)
+                case 2: Menu.create_new_user(users_list)
+                case 3: Menu.listar_usuarios(users_list)
                 case _: option = 4
 
         print("Fim do programa!")
@@ -53,42 +47,32 @@ class Menu:
 
         return users_list[option]
 
-    def user_options(usuario):
-        print(f"\nSelecione uma das opções:")
-        print(f"<1> - Reproduzir uma música")
-        print(f"<2> - Listar músicas")
-        print(f"<3> - Listar playlists")
-        print(f"<4> - Reproduzir uma playlist")
-        print(f"<5> - Criar nova playlist")
-        print(f"<6> - Concatenar playlists")
-        print(f"<7> - Gerar relatório")
-        print(f"<8> - Criar match") #criar avaliacao
-        print(f"<9> - Sair")
+    def user_options(user, songs_list, podcasts_list):
 
         option = 0
 
-        print(usuario)
+        print(user)
         while (option != 9):
-            option = Menu.selection_logic(9)
+            option = Menu.select_user_option()
             match (option):
-                case 1: Menu.reproduzir_musica(usuario)
-                case 2: print('b')
-                case 3: print('c')
-                case 4: print('d')
-                case 5: print('e')
-                case 6: print('f')
-                case 7: print('g')
-                case 8: print (Menu.create_match_playlist_option(usuario))
+                case 1: Menu.reproduzir_musica(user)
+                case 2: Menu.listar_musicas(user)
+                case 3: Menu.listar_playlists(user)
+                case 4: Menu.reproduzir_playlist(user)
+                case 5: Menu.criar_nova_playlist(user, songs_list, podcasts_list)
+                case 6: Menu.concatenar_playlists(user)
+                case 7: Menu.gerar_relatorio(user)
+                case 8: print(Menu.create_match_playlist_option(user))
                 case _: option = 9
 
     def select_user_option():
         ls_options = ['Reproduzir uma música', 'Listar músicas', 'Listar playlists',
-                      'Reproduzir uma playlist', 'Criar nova playlist',
-                      'Concatenar playlists', 'Gerar relatório', 'Sair']
+                        'Reproduzir uma playlist', 'Criar nova playlist',
+                        'Concatenar playlists', 'Gerar relatório',' Criar match' 'Sair']
         Menu.enumarate_logic(ls_options)
 
-        return Menu.selection_logic(8)
-
+        return Menu.selection_logic(9)
+    
     def reproduzir_musica(user):
         musicas = list(user.musicas)
 
@@ -160,8 +144,6 @@ class Menu:
             
 
 
-
-        # Usuario.criar_playlist(nome)
         
     def create_new_user(users_list):
         print("Criar novo usuário")
@@ -231,17 +213,21 @@ class Menu:
                 print("Opção inválida. Tente novamente.")
 
         return option
-    def create_new_user():
+    
+    def create_new_user(users_list):
         print("Criar novo usuário")
-        while True:
+        valid = False
+        while not valid:
             nome_usuario = input("Digite o nome do usuário: ")
-            usuario_existente = any(u.nome == nome_usuario for u in Menu.users) 
+            usuario_existente = any(u.nome == nome_usuario for u in users_list) 
             if usuario_existente:
-                print(f"Erro.: O nome de usuário '{nome_usuario}' já existe.")
+                print(f"Erro: O nome de usuário '{nome_usuario}' já existe.\n")
+                LeArquivo.log_error(f"Usuário '{nome_usuario}' já existe")
             else:
-                new_user = Usuario(nome=nome_usuario, playlists=[])
-                Menu.users.append(new_user)
+                new_user = Usuario(nome_usuario, [])
+                users_list.append(new_user)
                 print(f"Usuário '{new_user.nome}' criado com sucesso.")
+                valid = True
 
     def create_match_playlist_option(u1: Usuario):
         print("Criar match")

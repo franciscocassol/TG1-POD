@@ -60,7 +60,7 @@ class Analises:
         
         return Playlist(
             nome = f"Match de {u1.nome} e {u2.nome}",
-            user = u1
+            user = u1,
             itens= musicas_compativeis
         )
 
