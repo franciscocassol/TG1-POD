@@ -18,7 +18,7 @@ class Menu:
         while (option != 4):
             option = Menu.select__main_option()
             match (option):
-                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list)
+                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list, users_list)
                 case 2: Menu.create_new_user(users_list)
                 case 3: Menu.listar_usuarios(users_list)
                 case _: option = 4
@@ -47,12 +47,12 @@ class Menu:
 
         return users_list[option]
 
-    def user_options(user, songs_list, podcasts_list):
+    def user_options(user, songs_list, podcasts_list, users_list):
 
         option = 0
 
         print(user)
-        while (option != 9):
+        while (option != 10):
             option = Menu.select_user_option()
             match (option):
                 case 1: Menu.reproduzir_musica(user)
@@ -62,16 +62,17 @@ class Menu:
                 case 5: Menu.criar_nova_playlist(user, songs_list, podcasts_list)
                 case 6: Menu.concatenar_playlists(user)
                 case 7: Menu.gerar_relatorio(user)
-                case 8: print(Menu.create_match_playlist_option(user))
-                case _: option = 9
+                case 8: Menu.avaliar_musica(user, songs_list)
+                case 9: print(Menu.create_match_playlist_option(user, users_list ))
+                case _: option = 10
 
     def select_user_option():
         ls_options = ['Reproduzir uma música', 'Listar músicas', 'Listar playlists',
                         'Reproduzir uma playlist', 'Criar nova playlist',
-                        'Concatenar playlists', 'Gerar relatório',' Criar match' 'Sair']
+                        'Concatenar playlists', 'Gerar relatório', 'Avaliar Música', 'Criar match', 'Sair']
         Menu.enumarate_logic(ls_options)
 
-        return Menu.selection_logic(9)
+        return Menu.selection_logic(10)
     
     def reproduzir_musica(user):
         musicas = list(user.musicas)
@@ -142,52 +143,37 @@ class Menu:
             print(f'{midias[option - 1]} adicionada com sucesso')
             midias.pop(option - 1)
             
-
-
-        
-    def create_new_user(users_list):
-        print("Criar novo usuário")
-        valid = False
-        while not valid:
-            nome_usuario = input("Digite o nome do usuário: ")
-            usuario_existente = any(u.nome == nome_usuario for u in users_list) 
-            if usuario_existente:
-                print(f"Erro.: A playlist '{nome_usuario}' já existe.")
-            else:
-                new_user = Usuario(nome_usuario, [])
-                users_list.append(new_user)
-                print(f"Usuário '{new_user.nome}' criado com sucesso.")
-                valid = True
-
     def concatenar_playlists(user):
         playlists = list(user.playlists)
 
+        playlists_copy = playlists.copy()
 
-        playlists_len = len(playlists)
 
-        if len(playlists) < 2:
+        playlists_len = len(playlists_copy)
+
+        if len(playlists_copy) < 2:
             print('\nQuantidade de playlists insuficientes para realizar essa ação')
             print(f'Atulamente existem {playlists_len} playlist(s)')
             return
 
-        Menu.enumarate_logic(playlists)
+        Menu.enumarate_logic(playlists_copy)
         option = Menu.selection_logic(playlists_len)
 
-        playlist_1 = playlists[option - 1]
+        playlist_1 = playlists_copy[option - 1]
 
-        new_playlist_list = playlists.remove(playlist_1)
+        playlists_copy.remove(playlist_1)
 
-        Menu.enumarate_logic(playlists)
+        Menu.enumarate_logic(playlists_copy)
         option2 = Menu.selection_logic(playlists_len - 1)
 
-        playlist_2 = playlists[option2 - 1]
+        playlist_2 = playlists_copy[option2 - 1]
 
         print('pl', playlist_1)
         print('p2', playlist_2)
 
-        # p_new = playlist_1 + playlist_2
+        p_new = user.concatenar_playlists(playlist_1,playlist_2)
 
-        # print(p_new)
+        print('Playlists Concatenadas com sucesso')
 
     def gerar_relatorio(user):
         pass
@@ -229,11 +215,39 @@ class Menu:
                 print(f"Usuário '{new_user.nome}' criado com sucesso.")
                 valid = True
 
-    def create_match_playlist_option(u1: Usuario):
-        print("Criar match")
+    def avaliar_musica(user, songs_list):
+        print('\nEscolha uma música para avaliar:')
+        Menu.enumarate_logic(songs_list, False)
+
+        songs_len = len(songs_list)
+        option = Menu.selection_logic(songs_len)
+
+        musica = songs_list[option - 1]
+        # print('\nEscolha uma nota de 1 a 5')
+        # option = Menu.selection_logic(5) 
+
+        nota = -1
+        while nota < 1 or nota > 5:
+            try:
+                nota = int(input('\nEscolha uma nota de 1 a 5: '))
+                if nota < 1 or nota > 5:
+                    raise ValueError("Avaliação inválida (nota fora do intervalo)")
+                break  
+            except ValueError as e:
+                print("\nErro: digite um número inteiro entre 1 e 5.")
+                LeArquivo.log_error(e, "(nota fora do intervalo)")
+
+        musica.avaliar(nota)
+        print(f'\n{musica.titulo} avaliada com a nota {nota} com sucesso!')
+
+
+
+
+    def create_match_playlist_option(u1: Usuario, users_list):
+        print("\nCriar match")
         print("Escolha o usuário para fazer o match")
 
-        opcoes = [u for u in Menu.all_usuers if u.nome != u1.nome]
+        opcoes = [u for u in users_list if u.nome != u1.nome]
 
         for idx, u in enumerate(opcoes):
             print(f"<{idx+1}> - {u.nome}")

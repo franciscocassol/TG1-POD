@@ -41,6 +41,12 @@ class Usuario:
     def criar_playlist(self, nome):
         self.playlists.append(Playlist(nome, self, []))
         return self.playlists[-1]
+    
+    def concatenar_playlists(self, p1, p2):
+        self.playlists.remove(p2)
+        new = p1 + p2
+        self.playlists[self.playlists.index(p1)] = new
+        return new
 
     def __str__(self):
         return f'{self.nome}'

@@ -25,7 +25,7 @@ class ArquivoDeMidia(ABC):
         self.titulo == other.titulo and self.artista == other.artista
 
     def __str__(self):
-        pass
+        return f'{self.titulo}'
 
     def __repr__(self):
-        pass
+        return f'{self.titulo}'

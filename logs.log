@@ -6,3 +6,5 @@ Erro ao abrir o arquivo ERRO: [Errno 2] No such file or directory: 'TG1-POD\\con
 Erro ao abrir o arquivo ERRO: [Errno 2] No such file or directory: 'TG1-POD\\config\\dados.md'
 Erro ao abrir o arquivo ERRO: [Errno 2] No such file or directory: 'TG1-POD\\config\\dados.md'
 Erro ao abrir o arquivo ERRO: [Errno 2] No such file or directory: '..\\config\\dados.md'
+ ERRO: Usuário 'Ana' já existe
+(nota fora do intervalo) ERRO: Avaliação inválida (nota fora do intervalo)

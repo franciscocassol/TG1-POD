@@ -6,17 +6,17 @@ class Playlist:
 
     def __init__(
             self, nome: str, usuario,
-            itens: list[ArquivoDeMidia]):
+            itens: list[ArquivoDeMidia], reproducoes: int = 0):
         self.nome = nome
         self.usuario = usuario
         self.itens = itens
-        self.reproducoes = 0
+        self.reproducoes = reproducoes
 
     def adicionar_midia(self, midia: ArquivoDeMidia):
         self.itens.append(midia)
 
     def remover_midia(self, midia: ArquivoDeMidia):
-        self.itens.append(midia)
+        self.itens.remove(midia)
 
     def reproduzir(self):
         self.reproducoes += 1
@@ -26,11 +26,15 @@ class Playlist:
             i.reproduzir()
 
     def __add__(self, other):
+        set1 = set(self.itens)
+        set2 = set(other.itens)
+        uniao_set = list(set1.union(set2))
+        
         return Playlist(
             self.nome,
             self.usuario,
-            self.itens + other.itens,
-            self.reproducoes + other.reproducoes,
+            uniao_set,
+            self.reproducoes + other.reproducoes
         )
 
     def __len__(self):
