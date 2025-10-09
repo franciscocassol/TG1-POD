@@ -1,4 +1,3 @@
-# arquivo inicializado
 from .usuario import Usuario
 from .musica import Musica
 from .playlist import Playlist
