@@ -10,7 +10,7 @@ class Menu:
             option = Menu.select_option()
             match (option):
                 case 1: Menu.user_options(Menu.sign_in_user())
-                case 2: print('b') 
+                case 2: Menu.create_new_user()
                 case 3: print('c')
                 case _: option = 4
 
@@ -46,7 +46,7 @@ class Menu:
         print(f"<5> - Criar nova playlist")
         print(f"<6> - Concatenar playlists")
         print(f"<7> - Gerar relatório")
-        print(f"<8> - Criar match")
+        print(f"<8> - Criar match") #criar avaliacao
         print(f"<9> - Sair")
 
         option = 0
@@ -56,7 +56,7 @@ class Menu:
             option = Menu.selection_logic(9)
             match (option):
                 case 1: Menu.reproduzir_musica(usuario)
-                case 2: Menu.create_new_user()
+                case 2: print('b')
                 case 3: print('c')
                 case 4: print('d')
                 case 5: print('e')

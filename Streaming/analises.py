@@ -7,15 +7,24 @@ class Analises:
 
     @staticmethod
     def top_musicas_reproduzidas(musicas: list[Musica], top_n: int) -> list[Musica]:
-        pass
+        musicas_ordenadas = sorted(musicas, key=lambda musica: musica.reproducoes, reverse=True)
+        return musicas_ordenadas[:top_n]
 
     @staticmethod
     def playlist_mais_popular(playlists: list[Playlist]) -> Playlist:
-        pass
+        if not playlists:
+            return None
+        top_playlist = max(playlists, key=lambda playlist: playlist.reproducoes)
+        return top_playlist
 
     @staticmethod
     def usuario_mais_ativo(usuarios: list[Usuario]) -> Usuario:
-        pass
+        if not usuarios:
+            return None
+        
+        usuario_ativo = max(usuarios, key=lambda usuario: len(usuario.historico))
+        return usuario_ativo
+    
 
     @staticmethod
     def media_avaliacoes(musicas: list[Musica]) -> dict[str, float]:
