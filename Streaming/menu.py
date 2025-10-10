@@ -191,7 +191,7 @@ class Menu:
 
             relatorio.append(f"Top musicas reproduzidas: {top_musicas_reproduzidas}\n")
             relatorio.append(f"Playlist mais popular: {playlist_mais_popular}\n")
-            relatorio.append(f"Média das avaliações das músicas: {media_avaliacoes:.2f}\n")
+            relatorio.append(f"Média das avaliações das músicas: {media_avaliacoes}\n")
             relatorio.append(f"Total de reproducoes: {total_reproducoes}\n")
             relatorio.append(f"Usuário mais ativo: {usuario_mais_ativo}\n")
             relatorio.append("=============================================\n")

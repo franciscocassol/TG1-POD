@@ -2,5 +2,7 @@
 Total de usuários: 3
 Top musicas reproduzidas: [Bohemian Rhapsody, Shape of You, Lose Yourself, Fur Elise, Rolling in the Deep]
 Playlist mais popular: Favoritas: [Bohemian Rhapsody, Shape of You, Lose Yourself]
+Média das avaliações das músicas: {'Bohemian Rhapsody': 5, 'Shape of You': 5, 'Lose Yourself': 5, 'Fur Elise': 5, 'Rolling in the Deep': 5}
+Total de reproducoes: 0
 Usuário mais ativo: Ana
 =============================================

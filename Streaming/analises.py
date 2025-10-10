@@ -28,11 +28,21 @@ class Analises:
 
     @staticmethod
     def media_avaliacoes(musicas: list[Musica]) -> dict[str, float]:
-        pass
+        medias = {}
+        for musica in musicas:
+            if len(musica.avaliacoes) != 0:
+                media = sum(musica.avaliacoes)/len(musica.avaliacoes)
+                medias[musica.titulo] = media
+            else:
+                medias[musica.titulo] = 5
+        return medias
 
     @staticmethod
     def total_reproducoes(usuarios: list[Usuario]) -> int:
-        pass
+        total = 0
+        for usuario in usuarios:
+            total += len(usuario.historico)
+        return total
 
     @staticmethod
     def create_match_playlists(u1: Usuario, u2: Usuario):

@@ -6,3 +6,4 @@ Erro ao gerar relatório ERRO: 'Playlist' object has no attribute 'historico'
 Erro ao gerar relatório ERRO: 'Playlist' object has no attribute 'historico'
 Erro ao gerar relatório ERRO: object of type 'Usuario' has no len()
 Erro ao gerar relatório ERRO: unsupported format string passed to NoneType.__format__
+Erro ao gerar relatório ERRO: unsupported format string passed to dict.__format__
