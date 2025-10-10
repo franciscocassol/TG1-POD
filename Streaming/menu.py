@@ -2,10 +2,13 @@ from .usuario import Usuario
 from .le_arquivo import LeArquivo
 from .analises import Analises
 from pathlib import Path
+import os
 
 
 class Menu:
     users = []
+    musicas = []
+    podcasts = []
     def initialize():
         option = 0
         

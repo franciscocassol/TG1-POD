@@ -121,7 +121,7 @@ class Analises:
 
             if avaliacoes_u1 and avaliacoes_u2:
                 media_u1 = sum(avaliacoes_u1) / len(avaliacoes_u1)
-                media_u2 = sum(avaliacoes_u1) / len(avaliacoes_u2)
+                media_u2 = sum(avaliacoes_u2) / len(avaliacoes_u2)
             
             if abs(media_u1 - media_u2) <= 1:
                 musicas_compativeis.append(musica)
@@ -132,7 +132,7 @@ class Analises:
         
         return Playlist(
             nome = f"Match de {u1.nome} e {u2.nome}",
-            user = u1,
+            usuario = u1,
             itens= musicas_compativeis
         )
 
