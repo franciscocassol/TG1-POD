@@ -6,10 +6,18 @@ import os
 
 
 class Menu:
+    """
+    Classe responsável por exibir os menus de interação do sistema e gerenciar
+    a navegação entre as diferentes funcionalidades.
+    """
     users = []
     musicas = []
     podcasts = []
     def initialize():
+        """
+        Inicializa o menu principal do programa, carregando os dados do arquivo
+        de configuração e iniciando o loop de seleção de opções.
+        """
         option = 0
         
         file_path = Path(__file__).resolve().parent.parent / 'config' / 'dados.md'
@@ -29,6 +37,12 @@ class Menu:
         print("Fim do programa!")
 
     def select__main_option() -> int:
+        """
+        Exibe as opções do menu principal e solicita a escolha do usuário.
+        
+        Returns:
+            int: A opção selecionada pelo usuário.
+        """
 
         ls_options = ['Entrar como usuário', 'Criar novo usuário',
                       'Listar usuários',  'Finalizar programa']
@@ -37,10 +51,25 @@ class Menu:
         return Menu.selection_logic(4)
 
     def listar_usuarios(users_list):
+        """
+        Lista todos os usuários cadastrados no sistema.
+        
+        Args:
+            users_list (list[Usuario]): A lista de usuários do sistema.
+        """
 
         Menu.enumarate_logic(users_list, False)
 
     def sign_in_user(users_list):
+        """
+        Permite ao usuário entrar no sistema, selecionando um usuário existente.
+        
+        Args:
+            users_list (list[Usuario]): A lista de usuários do sistema.
+
+        Returns:
+            Usuario: O objeto Usuario selecionado.
+        """
 
         Menu.enumarate_logic(users_list)
 
@@ -51,6 +80,16 @@ class Menu:
         return users_list[option]
 
     def user_options(user, songs_list, podcasts_list, users_list, playlists_list):
+        """
+        Exibe o menu de opções para um usuário logado e gerencia as ações.
+
+        Args:
+            user (Usuario): O usuário atualmente logado.
+            songs_list (list[Musica]): A lista de músicas do sistema.
+            podcasts_list (list[Podcast]): A lista de podcasts do sistema.
+            users_list (list[Usuario]): A lista de todos os usuários do sistema.
+            playlists_list (list[Playlist]): A lista de todas as playlists do sistema.
+        """
 
         option = 0
 
@@ -70,6 +109,11 @@ class Menu:
                 case _: option = 10
 
     def select_user_option():
+        """
+        Exibe as opções do menu de usuário e solicita a escolha.
+
+        Returns: A opção selecionada pelo usuário.
+        """
         ls_options = ['Reproduzir uma música', 'Listar músicas', 'Listar playlists',
                         'Reproduzir uma playlist', 'Criar nova playlist',
                         'Concatenar playlists', 'Gerar relatório', 'Avaliar Música', 'Criar match', 'Sair']
@@ -78,6 +122,12 @@ class Menu:
         return Menu.selection_logic(10)
     
     def reproduzir_musica(user):
+        """
+        Permite ao usuário selecionar e reproduzir uma música do seu acervo.
+        
+        Args:
+            user (Usuario): O usuário logado.
+        """
         musicas = list(user.musicas)
 
         Menu.enumarate_logic(musicas)
@@ -88,16 +138,34 @@ class Menu:
         user.ouvir_midia(musicas[option - 1])
 
     def listar_musicas(user):
+        """
+        Lista as músicas no acervo do usuário.
+        
+        Args:
+            user (Usuario): O usuário logado.
+        """
         musicas = list(user.musicas)
 
         Menu.enumarate_logic(musicas, False)
 
     def listar_playlists(user):
+        """
+        Lista as playlists criadas pelo usuário.
+
+        Args:
+            user (Usuario): O usuário logado.
+        """
         playlists = list(user.playlists)
 
         Menu.enumarate_logic(playlists, False)
 
     def reproduzir_playlist(user):
+        """
+        Permite ao usuário selecionar e reproduzir uma playlist.
+
+        Args:
+            user (Usuario): O usuário logado.
+        """
         playlists = list(user.playlists)
 
         if len(playlists) == 0:
@@ -113,6 +181,15 @@ class Menu:
 
 
     def criar_nova_playlist(user, songs_list, podcasts_list, playlists_list):
+        """
+        Permite ao usuário criar uma nova playlist e adicionar mídias a ela.
+
+        Args:
+            user (Usuario): O usuário logado.
+            songs_list (list[Musica]): Lista de todas as músicas do sistema.
+            podcasts_list (list[Podcast]): Lista de todos os podcasts do sistema.
+            playlists_list (list[Playlist]): Lista de todas as playlists do sistema.
+        """
 
         valid = False
         while not valid:
@@ -212,6 +289,12 @@ class Menu:
             print("Ocorreu um erro ao gerar o relatório.")
 
     def enumarate_logic(options: list, print_select=True):
+        """
+        Permite ao usuário concatenar duas de suas playlists, criando uma nova.
+
+        Args:
+            user (Usuario): O usuário logado.
+        """
         if print_select:
             print(f"\nSelecione uma das opções:")
         print()
@@ -219,6 +302,16 @@ class Menu:
             print(f"<{idx + 1}> - {o}")
 
     def selection_logic(n_options):
+        """
+        Valida a entrada do usuário, garantindo que seja um número inteiro
+        dentro de um intervalo válido.
+
+        Args:
+            n_options (int): O número máximo de opções válidas.
+
+        Returns:
+            int: A opção selecionada e validada.
+        """
         option = 0
         valid = False
         while (not valid):
@@ -234,6 +327,12 @@ class Menu:
         return option
     
     def create_new_user(users_list):
+        """
+        Permite a criação de um novo usuário, verificando se o nome já existe.
+
+        Args:
+            users_list (list[Usuario]): A lista de usuários do sistema.
+        """
         print("Criar novo usuário")
         valid = False
         while not valid:
@@ -252,6 +351,13 @@ class Menu:
                 LeArquivo.log_error(e, f"Usuário '{nome_usuario}' já existe")
 
     def avaliar_musica(user, songs_list):
+        """
+        Permite a um usuário avaliar uma música com uma nota de 1 a 5.
+
+        Args:
+            user (Usuario): O usuário logado.
+            songs_list (list[Musica]): A lista de músicas do sistema.
+        """
         print('\nEscolha uma música para avaliar:')
         Menu.enumarate_logic(songs_list, False)
 
@@ -278,6 +384,13 @@ class Menu:
 
 
     def create_match_playlist_option(u1: Usuario, users_list):
+        """
+        Inicia o processo de criação de uma playlist de "Match" entre dois usuários.
+
+        Args:
+            u1 (Usuario): O usuário logado.
+            users_list (list[Usuario]): A lista de usuários do sistema.
+        """
         print("\nCriar match")
         print("Escolha o usuário para fazer o match")
 
