@@ -14,7 +14,7 @@ class Usuario:
         self.playlists_names = playlists_names
         self.playlists = []
 
-        self.historico = []
+        self.historico = {}
         self.musicas = set()
         self.podcasts = set()
 
@@ -35,6 +35,7 @@ class Usuario:
 
 
     def ouvir_midia(self, midia: ArquivoDeMidia):
+        self.historico[midia.titulo] = midia
         midia.reproducoes += 1
         midia.reproduzir()
 
@@ -47,6 +48,10 @@ class Usuario:
         new = p1 + p2
         self.playlists[self.playlists.index(p1)] = new
         return new
+    
+    def __iter__(self):
+        # Iterar sobre as playlists
+        return iter(self.playlists)
 
     def __str__(self):
         return f'{self.nome}'

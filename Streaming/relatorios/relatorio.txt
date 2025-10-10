@@ -1,0 +1,6 @@
+===== RELATÓRIO DO SISTEMA DE STREAMING =====
+Total de usuários: 3
+Top musicas reproduzidas: [Bohemian Rhapsody, Shape of You, Lose Yourself, Fur Elise, Rolling in the Deep]
+Playlist mais popular: Favoritas: [Bohemian Rhapsody, Shape of You, Lose Yourself]
+Usuário mais ativo: Ana
+=============================================

@@ -1,0 +1,8 @@
+ ERRO: Usuário 'Ana' já existe
+Erro ao gerar relatório ERRO: Analises.top_musicas_reproduzidas() missing 1 required positional argument: 'top_n'
+Erro ao gerar relatório ERRO: 'Usuario' object is not iterable
+Erro ao gerar relatório ERRO: 'Playlist' object has no attribute 'historico'
+Erro ao gerar relatório ERRO: 'Playlist' object has no attribute 'historico'
+Erro ao gerar relatório ERRO: 'Playlist' object has no attribute 'historico'
+Erro ao gerar relatório ERRO: object of type 'Usuario' has no len()
+Erro ao gerar relatório ERRO: unsupported format string passed to NoneType.__format__

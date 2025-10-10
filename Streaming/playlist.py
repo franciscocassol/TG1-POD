@@ -1,5 +1,5 @@
 from .arquivo_de_midia import ArquivoDeMidia
-# from Streaming.usuario import Usuario
+
 
 class Playlist:
     
@@ -18,12 +18,12 @@ class Playlist:
     def remover_midia(self, midia: ArquivoDeMidia):
         self.itens.remove(midia)
 
-    def reproduzir(self):
+    def reproduzir(self, user):
         self.reproducoes += 1
-        # print('Músicas reproduzidas')
+
         for i in self.itens:
-            i.reproducoes += 1
-            i.reproduzir()
+            user.ouvir_midia(i)
+
 
     def __add__(self, other):
         set1 = set(self.itens)

@@ -2,13 +2,19 @@ from .usuario import Usuario
 from .musica import Musica
 from .podcast import Podcast
 from .playlist import Playlist
+from pathlib import Path
 
 
 class LeArquivo:
 
+    @staticmethod
     def log_error(e, msg=""):
         """Função para registrar erros no logs.log"""
-        with open('logs.log', 'a', encoding='utf-8') as log:
+        log_dir = Path(__file__).parent / "logs"  
+        log_dir.mkdir(exist_ok=True) 
+
+        log_path = log_dir / "erros.log"  
+        with open(log_path, 'a', encoding='utf-8') as log:
             log.write(f'{msg} ERRO: {e}\n')
 
     def read_file(file_name):
@@ -63,7 +69,7 @@ class LeArquivo:
         for u in users_list:
             u.inicialize_media()
 
-        return users_list, songs_list, podcasts_list
+        return users_list, songs_list, podcasts_list, playlists_list
 
     def read_user(lines):
         users_list = []
@@ -130,6 +136,8 @@ class LeArquivo:
 
     def read_playlist(lines, users_dict, dict_midias):
 
+        playlists_list = []
+
         for i in range(len(lines) - 2):
             words = lines[i].strip().split(': ')
             if words and words[0] == '- nome':
@@ -151,3 +159,6 @@ class LeArquivo:
                     if midia_object is None:
                         LeArquivo.log_error(f"Música '{i}' inexistente na playlist '{playlist_object.nome}' do usuário '{user}'")
                     playlist_object.adicionar_midia(midia_object)
+                playlists_list.append(playlist_object)
+        return playlists_list
+

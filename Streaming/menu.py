@@ -12,13 +12,13 @@ class Menu:
         file_path = Path(__file__).resolve().parent.parent / 'config' / 'dados.md'
         
 
-        users_list, songs_list, podcasts_list = LeArquivo.read_file(file_path)
+        users_list, songs_list, podcasts_list, playlists_list = LeArquivo.read_file(file_path)
 
 
         while (option != 4):
             option = Menu.select__main_option()
             match (option):
-                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list, users_list)
+                case 1: Menu.user_options(Menu.sign_in_user(users_list), songs_list, podcasts_list, users_list, playlists_list)
                 case 2: Menu.create_new_user(users_list)
                 case 3: Menu.listar_usuarios(users_list)
                 case _: option = 4
@@ -47,7 +47,7 @@ class Menu:
 
         return users_list[option]
 
-    def user_options(user, songs_list, podcasts_list, users_list):
+    def user_options(user, songs_list, podcasts_list, users_list, playlists_list):
 
         option = 0
 
@@ -59,9 +59,9 @@ class Menu:
                 case 2: Menu.listar_musicas(user)
                 case 3: Menu.listar_playlists(user)
                 case 4: Menu.reproduzir_playlist(user)
-                case 5: Menu.criar_nova_playlist(user, songs_list, podcasts_list)
+                case 5: Menu.criar_nova_playlist(user, songs_list, podcasts_list, playlists_list)
                 case 6: Menu.concatenar_playlists(user)
-                case 7: Menu.gerar_relatorio(user)
+                case 7: Menu.gerar_relatorio(users_list, songs_list, playlists_list)
                 case 8: Menu.avaliar_musica(user, songs_list)
                 case 9: print(Menu.create_match_playlist_option(user, users_list ))
                 case _: option = 10
@@ -106,10 +106,10 @@ class Menu:
         playlists_len = len(playlists)
         option = Menu.selection_logic(playlists_len)
 
-        playlists[option - 1].reproduzir()
+        playlists[option - 1].reproduzir(user)
 
 
-    def criar_nova_playlist(user, songs_list, podcasts_list):
+    def criar_nova_playlist(user, songs_list, podcasts_list, playlists_list):
 
         valid = False
         while not valid:
@@ -119,6 +119,7 @@ class Menu:
                 print(f"Erro: O nome de usuário '{nome_playlist}' já existe.\n")
                 continue
             new_playlist = user.criar_playlist(nome_playlist)
+            playlists_list.append(new_playlist)
             print(f"\nPlaylist '{nome_playlist}' criada com sucesso.")
             valid = True
 
@@ -168,15 +169,44 @@ class Menu:
 
         playlist_2 = playlists_copy[option2 - 1]
 
-        print('pl', playlist_1)
-        print('p2', playlist_2)
-
         p_new = user.concatenar_playlists(playlist_1,playlist_2)
 
         print('Playlists Concatenadas com sucesso')
 
-    def gerar_relatorio(user):
-        pass
+    @staticmethod
+    def gerar_relatorio(users_list, songs_list, playlists_list):
+        """Gera um relatório com análises e salva em relatorios/relatorio.txt"""
+
+        try:
+            top_musicas_reproduzidas = Analises.top_musicas_reproduzidas(songs_list, 5)
+            playlist_mais_popular = Analises.playlist_mais_popular(playlists_list)
+            usuario_mais_ativo = Analises.usuario_mais_ativo(users_list)
+            media_avaliacoes = Analises.media_avaliacoes(songs_list)
+            total_reproducoes = Analises.total_reproducoes(users_list)
+
+
+            relatorio = []
+            relatorio.append("===== RELATÓRIO DO SISTEMA DE STREAMING =====\n")
+            relatorio.append(f"Total de usuários: {len(users_list)}\n")
+
+            relatorio.append(f"Top musicas reproduzidas: {top_musicas_reproduzidas}\n")
+            relatorio.append(f"Playlist mais popular: {playlist_mais_popular}\n")
+            relatorio.append(f"Média das avaliações das músicas: {media_avaliacoes:.2f}\n")
+            relatorio.append(f"Total de reproducoes: {total_reproducoes}\n")
+            relatorio.append(f"Usuário mais ativo: {usuario_mais_ativo}\n")
+            relatorio.append("=============================================\n")
+
+            relatorio_path = Path(__file__).parent / "relatorios/relatorio.txt"
+
+        
+            with open(relatorio_path, "w", encoding="utf-8") as file:
+                file.writelines(relatorio)
+
+            print(f"\nRelatório gerado com sucesso!")
+
+        except Exception as e:
+            LeArquivo.log_error(e, "Erro ao gerar relatório")
+            print("Ocorreu um erro ao gerar o relatório.")
 
     def enumarate_logic(options: list, print_select=True):
         if print_select:
@@ -206,14 +236,17 @@ class Menu:
         while not valid:
             nome_usuario = input("Digite o nome do usuário: ")
             usuario_existente = any(u.nome == nome_usuario for u in users_list) 
-            if usuario_existente:
-                print(f"Erro: O nome de usuário '{nome_usuario}' já existe.\n")
-                LeArquivo.log_error(f"Usuário '{nome_usuario}' já existe")
-            else:
-                new_user = Usuario(nome_usuario, [])
-                users_list.append(new_user)
-                print(f"Usuário '{new_user.nome}' criado com sucesso.")
-                valid = True
+            try:
+                if usuario_existente:
+                    print(f"Erro: O nome de usuário '{nome_usuario}' já existe.\n")
+                    raise Exception(f'O nome de usuário {nome_usuario} já existe')
+                else:
+                    new_user = Usuario(nome_usuario, [])
+                    users_list.append(new_user)
+                    print(f"Usuário '{new_user.nome}' criado com sucesso.")
+                    valid = True
+            except Exception as e:
+                LeArquivo.log_error(e, f"Usuário '{nome_usuario}' já existe")
 
     def avaliar_musica(user, songs_list):
         print('\nEscolha uma música para avaliar:')
@@ -223,15 +256,13 @@ class Menu:
         option = Menu.selection_logic(songs_len)
 
         musica = songs_list[option - 1]
-        # print('\nEscolha uma nota de 1 a 5')
-        # option = Menu.selection_logic(5) 
 
         nota = -1
         while nota < 1 or nota > 5:
             try:
                 nota = int(input('\nEscolha uma nota de 1 a 5: '))
                 if nota < 1 or nota > 5:
-                    raise ValueError("Avaliação inválida (nota fora do intervalo)")
+                    raise ValueError("Avaliação inválida)")
                 break  
             except ValueError as e:
                 print("\nErro: digite um número inteiro entre 1 e 5.")
