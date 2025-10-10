@@ -72,7 +72,7 @@
 
 - nome: Favoritas  
     usuario: Ana  
-    itens: [Bohemian Rhapsody, Shape of You, Lose Yourself]
+    itens: [Bohemian Rhapsody, Shape of You, Lose Yourself, Teste]
     
 - nome: Treino  
     usuario: Ana  

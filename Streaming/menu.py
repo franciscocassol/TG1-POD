@@ -225,6 +225,12 @@ class Menu:
             midias.pop(option - 1)
             
     def concatenar_playlists(user):
+        """
+        Permite ao usuário concatenar duas de suas playlists, criando uma nova.
+
+        Args:
+            user (Usuario): O usuário logado.
+        """
         playlists = list(user.playlists)
 
         playlists_copy = playlists.copy()
@@ -288,43 +294,6 @@ class Menu:
             LeArquivo.log_error(e, "Erro ao gerar relatório")
             print("Ocorreu um erro ao gerar o relatório.")
 
-    def enumarate_logic(options: list, print_select=True):
-        """
-        Permite ao usuário concatenar duas de suas playlists, criando uma nova.
-
-        Args:
-            user (Usuario): O usuário logado.
-        """
-        if print_select:
-            print(f"\nSelecione uma das opções:")
-        print()
-        for idx, o in enumerate(options):
-            print(f"<{idx + 1}> - {o}")
-
-    def selection_logic(n_options):
-        """
-        Valida a entrada do usuário, garantindo que seja um número inteiro
-        dentro de um intervalo válido.
-
-        Args:
-            n_options (int): O número máximo de opções válidas.
-
-        Returns:
-            int: A opção selecionada e validada.
-        """
-        option = 0
-        valid = False
-        while (not valid):
-            try:
-                option = int(input("\nEscolha sua opção: "))
-                if (option >= 1 and option <= n_options):
-                    valid = True
-                else:
-                    print(f"Opção inválida. Escolha entre 1 e {n_options}")
-            except ValueError:
-                print("Opção inválida. Tente novamente.")
-
-        return option
     
     def create_new_user(users_list):
         """
@@ -381,8 +350,6 @@ class Menu:
         print(f'\n{musica.titulo} avaliada com a nota {nota} com sucesso!')
 
 
-
-
     def create_match_playlist_option(u1: Usuario, users_list):
         """
         Inicia o processo de criação de uma playlist de "Match" entre dois usuários.
@@ -410,3 +377,36 @@ class Menu:
             print(f"Playlis '{new_playlist.nome}' criada e adicionada a sua biblioteca")
         else:
             print("Não foi possivel criar a playlist.")
+
+    
+    def enumarate_logic(options: list, print_select=True):
+        if print_select:
+            print(f"\nSelecione uma das opções:")
+        print()
+        for idx, o in enumerate(options):
+            print(f"<{idx + 1}> - {o}")
+
+    def selection_logic(n_options):
+        """
+        Valida a entrada do usuário, garantindo que seja um número inteiro
+        dentro de um intervalo válido.
+
+        Args:
+            n_options (int): O número máximo de opções válidas.
+
+        Returns:
+            int: A opção selecionada e validada.
+        """
+        option = 0
+        valid = False
+        while (not valid):
+            try:
+                option = int(input("\nEscolha sua opção: "))
+                if (option >= 1 and option <= n_options):
+                    valid = True
+                else:
+                    print(f"Opção inválida. Escolha entre 1 e {n_options}")
+            except ValueError:
+                print("Opção inválida. Tente novamente.")
+
+        return option
