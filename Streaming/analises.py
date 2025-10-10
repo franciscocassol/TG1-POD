@@ -98,42 +98,46 @@ class Analises:
     @staticmethod
     def create_match_playlists(u1: Usuario, u2: Usuario):
         """
-        Cria uma playlist de "match" entre dois usuários, baseada nas músicas que ambos ouviram
+        Cria uma playlist de 'match' entre dois usuários, baseada nas músicas que ambos ouviram
         e cujas avaliações médias são compatíveis (diferença <= 1).
-
-        Args:
-            u1 (Usuario): Primeiro usuário.
-            u2 (Usuario): Segundo usuário.
-
-        Returns:
-            Playlist | None: Playlist com músicas compatíveis ou None caso não haja músicas compatíveis.
         """
+
         musicas_compativeis = []
-        musicas_em_comum = set(u1.historico.keys()) & set(u2.historico.keys())
+        musicas_em_comum = set(m.titulo for m in u1.musicas) & set(m.titulo for m in u2.musicas)
 
         if not musicas_em_comum:
-            print("Não há musicas em comum no historico dos usuarios para criar um match")
+            print("Não há músicas em comum no histórico dos usuários para criar um match.")
             return None
-        
-        for musica in musicas_em_comum:
-            avaliacoes_u1 = u1.historico.get(musica, [])
-            avaliacoes_u2 = u2.historico.get(musica, [])
 
-            if avaliacoes_u1 and avaliacoes_u2:
-                media_u1 = sum(avaliacoes_u1) / len(avaliacoes_u1)
-                media_u2 = sum(avaliacoes_u2) / len(avaliacoes_u2)
-            
-            if abs(media_u1 - media_u2) <= 1:
-                musicas_compativeis.append(musica)
+        # dicionários de avaliações por música
+        avaliacoes_u1 = {m.titulo: m.avaliacoes for m in u1.musicas}
+        avaliacoes_u2 = {m.titulo: m.avaliacoes for m in u2.musicas}
+
+        for titulo in musicas_em_comum:
+            aval1 = avaliacoes_u1.get(titulo, [])
+            aval2 = avaliacoes_u2.get(titulo, [])
+
+            # se algum não avaliou, ignora
+            if not aval1 or not aval2:
+                continue  
+
+            media1 = sum(aval1) / len(aval1)
+            media2 = sum(aval2) / len(aval2)
+
+            if abs(media1 - media2) <= 1:
+                # pegar o objeto Musica original do usuário 1
+                musica_obj = next((m for m in u1.musicas if m.titulo == titulo), None)
+                if musica_obj:
+                    musicas_compativeis.append(musica_obj)
 
         if not musicas_compativeis:
-            print("Não há musicas com avaliações compativeis para criar um match.")
+            print("Não há músicas com avaliações compatíveis para criar um match.")
             return None
-        
+
         return Playlist(
-            nome = f"Match de {u1.nome} e {u2.nome}",
-            usuario = u1,
-            itens= musicas_compativeis
+            nome=f"Match de {u1.nome} e {u2.nome}",
+            usuario=u1,
+            itens=musicas_compativeis
         )
 
 

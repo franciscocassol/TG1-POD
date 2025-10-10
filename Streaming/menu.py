@@ -105,7 +105,7 @@ class Menu:
                 case 6: Menu.concatenar_playlists(user)
                 case 7: Menu.gerar_relatorio(users_list, songs_list, playlists_list)
                 case 8: Menu.avaliar_musica(user, songs_list)
-                case 9: print(Menu.create_match_playlist_option(user, users_list ))
+                case 9: Menu.create_match_playlist_option(user, users_list)
                 case _: option = 10
 
     def select_user_option():

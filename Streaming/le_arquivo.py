@@ -222,6 +222,7 @@ class LeArquivo:
                     midia_object = dict_midias.get(i)
                     if midia_object is None:
                         LeArquivo.log_error(f"Música '{i}' inexistente na playlist '{playlist_object.nome}' do usuário '{user}'")
+                        continue
                     playlist_object.adicionar_midia(midia_object)
                 playlists_list.append(playlist_object)
         return playlists_list
