@@ -6,10 +6,20 @@ from pathlib import Path
 
 
 class LeArquivo:
+    """
+    Classe responsável por ler arquivos de texto e criar objetos de Usuário, Músicas, Podcasts
+    e Playlists. Possui métodos estáticos para leitura e registro de erros.
+    """
 
     @staticmethod
     def log_error(e, msg=""):
-        """Função para registrar erros no logs.log"""
+        """
+        Registra erros em um arquivo de log 'logs/erros.log'.
+
+        Args:
+            e (Exception | str): Objeto de exceção ou mensagem de erro.
+            msg (str, opcional): Mensagem adicional para contextualizar o erro.
+        """
         log_dir = Path(__file__).parent / "logs"  
         log_dir.mkdir(exist_ok=True) 
 
@@ -18,6 +28,19 @@ class LeArquivo:
             log.write(f'{msg} ERRO: {e}\n')
 
     def read_file(file_name):
+        """
+        Lê o arquivo de entrada e separa seu conteúdo em usuários, músicas, podcasts e playlists.
+
+        Args:
+            file_name (str): Nome do arquivo a ser lido.
+
+        Returns:
+            tuple: Quatro listas contendo objetos:
+                - users_list (list[Usuario])
+                - songs_list (list[Musica])
+                - podcasts_list (list[Podcast])
+                - playlists_list (list[Playlist])
+        """
 
         try:
             with open(f"{file_name}", "r", encoding='utf-8') as file:
@@ -71,7 +94,17 @@ class LeArquivo:
 
         return users_list, songs_list, podcasts_list, playlists_list
 
+    @staticmethod
     def read_user(lines):
+        """
+        Converte linhas de usuários em objetos Usuario.
+
+        Args:
+            lines (list[str]): Linhas correspondentes a usuários.
+
+        Returns:
+            list[Usuario]: Lista de objetos Usuario.
+        """
         users_list = []
 
         for i in range(len(lines) - 2):
@@ -91,7 +124,17 @@ class LeArquivo:
                 users_list.append(Usuario(words[1], playlist))
         return users_list
 
+    @staticmethod
     def read_song(lines):
+        """
+        Converte linhas de músicas em objetos Musica.
+
+        Args:
+            lines (list[str]): Linhas correspondentes a músicas.
+
+        Returns:
+            list[Musica]: Lista de objetos Musica.
+        """
         songs_list = []
 
         for i in range(len(lines) - 2):
@@ -110,8 +153,18 @@ class LeArquivo:
                 songs_list.append(
                     Musica(words[1], duration, artist, genre, []))
         return songs_list
-
+    
+    @staticmethod
     def read_podcast(lines):
+        """
+        Converte linhas de podcasts em objetos Podcast.
+
+        Args:
+            lines (list[str]): Linhas correspondentes a podcasts.
+
+        Returns:
+            list[Podcast]: Lista de objetos Podcast.
+        """
         podcasts_list = []
 
         for i in range(len(lines) - 2):
@@ -135,6 +188,17 @@ class LeArquivo:
         return podcasts_list
 
     def read_playlist(lines, users_dict, dict_midias):
+        """
+        Converte linhas de playlists em objetos Playlist, associando usuários e mídias.
+
+        Args:
+            lines (list[str]): Linhas correspondentes a playlists.
+            users_dict (dict[str, Usuario]): Dicionário de usuários para associação.
+            dict_midias (dict[str, ArquivoDeMidia]): Dicionário de mídias (músicas + podcasts).
+
+        Returns:
+            list[Playlist]: Lista de objetos Playlist.
+        """
 
         playlists_list = []
 
